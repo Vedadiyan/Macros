@@ -12,7 +12,7 @@ public class RpcParameterContext
 
     }
     public object GetValue(IMacrosTransport macrosTransport) {
-        if(macrosTransport.Request.Params.TryGetValue(Name, out object? value)) {
+        if(macrosTransport.Request.MacrosProtocol.Params.TryGetValue(Name, out object? value)) {
             return value;
         }
         return null!;

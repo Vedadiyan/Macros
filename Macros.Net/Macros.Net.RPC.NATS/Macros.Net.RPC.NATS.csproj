@@ -11,5 +11,7 @@
   <ItemGroup>
     <PackageReference Include="NATS.Client" Version="0.14.4" />
   </ItemGroup>
-
+  <ItemGroup>
+    <ProjectReference Include="../Macros.Net.RPC.Core/Macros.Net.RPC.Core.csproj"></ProjectReference>
+  </ItemGroup>
 </Project>
