@@ -5,13 +5,13 @@ namespace Macros.Net.RPC.NATS;
 
 public class MacrosNatsProtocol : IMacrosProtocol
 {
-    public string Procedure { get; set; }
+    public string Procedure { get; set; } = string.Empty;
 
     public int Timeout { get; set; }
 
-    public IReadOnlyDictionary<string, string> Headers { get; set; }
+    public IReadOnlyDictionary<string, string> Headers { get; set; } = new Dictionary<string, string>();
 
-    public IReadOnlyDictionary<string, object> Params { get; set; }
+    public IReadOnlyDictionary<string, object> Params { get; set; } = new Dictionary<string, object>();
 
     private byte[]? data;
     public ReadOnlySpan<byte> GetData()
