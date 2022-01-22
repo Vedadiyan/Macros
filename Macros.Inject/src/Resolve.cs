@@ -8,7 +8,7 @@ public class Resolve
     }
     public static object Service(Type type, string? name = null)
     {
-        return (T)Container.Current.Value.GetService((name ?? type.FullName)!).Value;
+        return Container.Current.Value.GetService((name ?? type.FullName)!).Value;
     }
 }
 

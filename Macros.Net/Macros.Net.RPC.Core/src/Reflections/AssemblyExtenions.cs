@@ -7,7 +7,8 @@ public static class AssemblyExtensions
 {
     public static IEnumerable<RpcControllerContext> GetControllers(this Assembly assembly)
     {
-        AssemblyName[] assemblyNames = assembly.GetReferencedAssemblies();
+        List<AssemblyName> assemblyNames = assembly.GetReferencedAssemblies().ToList();
+        assemblyNames.Add(assembly.GetName());
         foreach (var assemblyName in assemblyNames)
         {
             Assembly referencedAssembly = Assembly.Load(assemblyName);
@@ -17,7 +18,7 @@ public static class AssemblyExtensions
                 if (exportedType.TryGetCustomAttribute<RpcControllerAttribute>(out RpcControllerAttribute rpcControllerAttribute))
                 {
                     MethodInfo[] methodInfos = exportedType.GetMethods().Where(x=> x.GetCustomAttribute<NonActionAttribute>() == null).ToArray();
-                    yield return new RpcControllerContext(exportedType, rpcControllerAttribute.Namespace ?? exportedType.FullName ?? throw new NullReferenceException(), methodInfos);
+                    yield return new RpcControllerContext(exportedType, (rpcControllerAttribute.Namespace ?? exportedType.FullName  ?? throw new NullReferenceException()) + ".*", methodInfos);
                 }
             }
         }

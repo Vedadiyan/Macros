@@ -2,9 +2,9 @@ using Macros.Net.RPC.Core.Annotations;
 
 namespace Macros.Net.Tests.Controllers;
 
-[RpcController]
+[RpcController(Namespace = "Test")]
 public class NatsJsonController {
-    public string Simple(string message) {
-        return message;
+    public string Simple(int message) {
+        return message.ToString();
     }
 }

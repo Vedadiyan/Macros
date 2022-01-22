@@ -13,7 +13,7 @@ public class MacrosNatsProtocol : IMacrosProtocol
 
     public IReadOnlyDictionary<string, object> Params { get; set; } = new Dictionary<string, object>();
 
-    private byte[]? data;
+    private byte[] data = new byte[] { };
     public ReadOnlySpan<byte> GetData()
     {
         return data;
