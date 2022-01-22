@@ -32,7 +32,7 @@ public sealed class MacrosNatsServer : IMacrosServer
                     );
         }
     }
-    public Task StartAsync(CancellationToken cancellationToken)
+    public ValueTask StartAsync(CancellationToken cancellationToken)
     {
         cancellationToken.Register(() =>
         {
@@ -45,6 +45,6 @@ public sealed class MacrosNatsServer : IMacrosServer
         {
             subscription.Start();
         }
-        return Task.CompletedTask;
+        return ValueTask.CompletedTask;
     }
 }
