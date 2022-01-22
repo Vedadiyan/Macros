@@ -13,9 +13,16 @@ public sealed class RpcControllerContext
         Namespace = @namespace;
         actions = new Dictionary<string, RpcActionContext>();
     }
-    public void HandleRequest(IMacrosTransport macrosTransport) {
+    public async void HandleRequest(IMacrosTransport macrosTransport) {
         if(actions.TryGetValue(macrosTransport.Request.Action, out RpcActionContext? rpcActionContext)) {
-            rpcActionContext.GetActionExecutor(macrosTransport)(Macros.Inject.Resolve.Service(type));
+            object obj = rpcActionContext.GetActionExecutor(macrosTransport)(Macros.Inject.Resolve.Service(type));
+            if(obj is Task task) {
+                await task;
+            }
+            else if (obj is ValueTask valueTask) {
+                await valueTask;
+            }
+            macrosTransport.Response.SetResponse(obj);
         }
     }
 }

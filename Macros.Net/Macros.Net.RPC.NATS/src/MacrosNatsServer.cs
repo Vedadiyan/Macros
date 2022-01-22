@@ -18,7 +18,18 @@ public sealed class MacrosNatsServer : IMacrosServer
         IEnumerable<RpcControllerContext> controllers = Assembly.GetCallingAssembly().GetControllers();
         foreach (var controller in controllers)
         {
-            subscriptions.Add(connection.SubscribeAsync(controller.Namespace, (sender, e) => controller.HandleRequest(null)));
+            subscriptions.Add(
+                connection.SubscribeAsync(
+                    controller.Namespace,
+                    (sender, e) =>
+                        controller.HandleRequest(
+                            new MacrosNatsTransport(
+                                controller.Namespace,
+                                controller.Namespace.Split('.').Length,
+                                e.Message)
+                            )
+                        )
+                    );
         }
     }
     public Task StartAsync(CancellationToken cancellationToken)
@@ -30,7 +41,8 @@ public sealed class MacrosNatsServer : IMacrosServer
                 subscription.Unsubscribe();
             }
         });
-        foreach(var subscription in subscriptions) {
+        foreach (var subscription in subscriptions)
+        {
             subscription.Start();
         }
         return Task.CompletedTask;

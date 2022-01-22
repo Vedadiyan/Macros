@@ -15,7 +15,9 @@ public class MacrosNatsRequest : IMacrosRequest
     {
         Namespace = @namespace;
         Action = string.Join(',', msg.Subject.Split('.').Skip(namespaceSegments));
-        MacrosProtocol = new MacrosNatsProtocol(msg.Data);
+        MacrosProtocol = new MacrosNatsProtocol();
+        MacrosProtocol.Deserialize(msg.Data);
+        
     }
 
 }
