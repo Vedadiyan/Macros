@@ -21,18 +21,15 @@ public class NatsJsonControllerTest
     [Fact]
     public void SimpleTest()
     {
-        IMacrosProtocol macrosNatsProtocolRequest = new MacrosNatsProtocol
+        var macrosNatsProtocolRequest = new
         {
-            Params = new Dictionary<string, object>()
+            @params = new Dictionary<string, object>()
             {
                 ["message"] = 1
             }
         };
         IConnection connection = new ConnectionFactory().CreateConnection();
-        Msg msg = connection.Request("Test.Simple", macrosNatsProtocolRequest.Serialize());
-        IMacrosProtocol macrosNatsProtocolResponse = new MacrosNatsProtocol();
-        macrosNatsProtocolResponse.Deserialize(msg.Data);
-        string response = JsonSerializer.Deserialize<string>(macrosNatsProtocolResponse.GetData())!;
-        Assert.Equal(response, "1");
+        Msg msg = connection.Request("Test.Simple", System.Text.Encoding.UTF8.GetBytes(JsonSerializer.Serialize(macrosNatsProtocolRequest)));
+        string data = System.Text.Encoding.UTF8.GetString(msg.Data);
     }
 }

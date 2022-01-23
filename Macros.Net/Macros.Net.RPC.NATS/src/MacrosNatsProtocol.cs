@@ -11,7 +11,7 @@ public class MacrosNatsProtocol : IMacrosProtocol
 
     public IReadOnlyDictionary<string, string> Headers { get; set; } = new Dictionary<string, string>();
 
-    public IReadOnlyDictionary<string, object> Params { get; set; } = new Dictionary<string, object>();
+    public IReadOnlyDictionary<string, Func<Type, object>> Params { get; set; } = new Dictionary<string, Func<Type, object>>();
 
     private byte[] data = new byte[] { };
     public ReadOnlySpan<byte> GetData()

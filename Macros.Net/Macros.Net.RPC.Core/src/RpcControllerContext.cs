@@ -30,16 +30,35 @@ public sealed class RpcControllerContext
     {
         if (actions.TryGetValue(macrosTransport.Request.Action, out RpcActionContext? rpcActionContext))
         {
-            object obj = rpcActionContext.GetActionExecutor(macrosTransport)(Macros.Inject.Resolve.Service(type));
-            if (obj is Task task)
+            try
             {
-                await task;
+                object obj = rpcActionContext.GetActionExecutor(macrosTransport)(Macros.Inject.Resolve.Service(type));
+                if (obj is Task task)
+                {
+                    await task;
+                }
+                else if (obj is ValueTask valueTask)
+                {
+                    await valueTask;
+                }
+                if (macrosTransport.Response.StatusCode == 0)
+                {
+                    macrosTransport.Response.StatusCode = (int)MacrosStatusCodes.Ok;
+                }
+                macrosTransport.Response.SetResponse(obj);
+                await macrosTransport.Response.Respond();
             }
-            else if (obj is ValueTask valueTask)
+            catch (Exception ex)
             {
-                await valueTask;
+                macrosTransport.Response.StatusCode = (int)MacrosStatusCodes.UnandledExpection;
+                macrosTransport.Response.SetResponse(ex.Message);
+                await macrosTransport.Response.Respond();
             }
-            macrosTransport.Response.SetResponse(obj);
+        }
+        else
+        {
+            macrosTransport.Response.StatusCode = (int)MacrosStatusCodes.ActionNotFound;
+            macrosTransport.Response.SetResponse("Action not found");
             await macrosTransport.Response.Respond();
         }
     }

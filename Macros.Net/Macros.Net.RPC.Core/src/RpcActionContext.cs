@@ -40,7 +40,7 @@ public class RpcActionContext
         ParameterInfo[] parameterInfos = methodInfo.GetParameters();
         foreach (var parameterInfo in parameterInfos)
         {
-            yield return new RpcParameterContext(parameterInfo);
+            yield return new RpcParameterContext(parameterInfo, parameterInfo.GetCustomAttribute<RequestParamAttribute>()!);
         }
     }
 }
