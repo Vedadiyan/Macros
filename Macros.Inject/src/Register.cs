@@ -24,6 +24,22 @@ public class Register
     {
         Container.Current.Value.RegisterService(new TransientServiceSpace<T>(instance, name));
     }
+    public static void AddTransient(Type type)
+    {
+        Container.Current.Value.RegisterService(new TransientServiceSpace(type, type.FullName!));
+    }
+    public static void AddTranient(Type type, string name)
+    {
+        Container.Current.Value.RegisterService(new TransientServiceSpace(type, name));
+    }
+    public static void AddTransient(Type type, Func<object> instance)
+    {
+        Container.Current.Value.RegisterService(new TransientServiceSpace(type, instance, type.FullName!));
+    }
+    public static void AddTransient(Type type, Func<object> instance, string name)
+    {
+        Container.Current.Value.RegisterService(new TransientServiceSpace(type, instance, name));
+    }
 
     public static void AddScoped<T, R>() where R : class, new()
     {
@@ -45,6 +61,22 @@ public class Register
     {
         Container.Current.Value.RegisterService(new ScopedServiceSpace<T>(instance, name));
     }
+    public static void AddScoped(Type type)
+    {
+        Container.Current.Value.RegisterService(new ScopedServiceSpace(type, type.FullName!));
+    }
+    public static void AddScoped(Type type, string name)
+    {
+        Container.Current.Value.RegisterService(new ScopedServiceSpace(type, name));
+    }
+    public static void AddScoped(Type type, Func<object> instance)
+    {
+        Container.Current.Value.RegisterService(new ScopedServiceSpace(type, instance, type.FullName!));
+    }
+    public static void AddScoped(Type type, Func<object> instance, string name)
+    {
+        Container.Current.Value.RegisterService(new ScopedServiceSpace(type, instance, name));
+    }
 
     public static void AddSingleton<T, R>()
     {
@@ -54,7 +86,7 @@ public class Register
     {
         Container.Current.Value.RegisterService(new SingletonServiceSpace<T>(name));
     }
-        public static void AddSingleton<T>()
+    public static void AddSingleton<T>()
     {
         Container.Current.Value.RegisterService(new SingletonServiceSpace<T>(typeof(T).FullName!));
     }
@@ -65,5 +97,21 @@ public class Register
     public static void AddSingleton<T>(T instance, string name)
     {
         Container.Current.Value.RegisterService(new SingletonServiceSpace<T>(instance, name));
+    }
+    public static void AddSingleton(Type type)
+    {
+        Container.Current.Value.RegisterService(new SingletonServiceSpace(type, type.FullName!));
+    }
+    public static void AddSingleton(Type type, string name)
+    {
+        Container.Current.Value.RegisterService(new SingletonServiceSpace(type, name));
+    }
+    public static void AddSingleton(Type type, object instance)
+    {
+        Container.Current.Value.RegisterService(new SingletonServiceSpace(type, instance, type.FullName!));
+    }
+    public static void AddSingleton(Type type, object instance, string name)
+    {
+        Container.Current.Value.RegisterService(new SingletonServiceSpace(type, instance, name));
     }
 }
