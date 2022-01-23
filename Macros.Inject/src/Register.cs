@@ -1,3 +1,5 @@
+using System.Reflection;
+using Macros.Inject.Relfections;
 using Macros.Inject.ServiceSpace;
 
 namespace Macros.Inject;
@@ -28,7 +30,7 @@ public class Register
     {
         Container.Current.Value.RegisterService(new TransientServiceSpace(type, type.FullName!));
     }
-    public static void AddTranient(Type type, string name)
+    public static void AddTransient(Type type, string name)
     {
         Container.Current.Value.RegisterService(new TransientServiceSpace(type, name));
     }
@@ -113,5 +115,10 @@ public class Register
     public static void AddSingleton(Type type, object instance, string name)
     {
         Container.Current.Value.RegisterService(new SingletonServiceSpace(type, instance, name));
+    }
+
+    public static void AutoRegister()
+    {
+        Assembly.GetExecutingAssembly().RegisterInjectables();
     }
 }
