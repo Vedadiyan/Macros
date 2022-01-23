@@ -5,27 +5,26 @@ using NATS.Client;
 
 namespace Macros.Net.RPC.NATS;
 
-public class MacrosNatsResponse : IMacrosResponse
+public class MacrosNatsOutboundResponse : IMacrosResponse
 {
     public string Namespace { get; init; }
     public int StatusCode { get; set; }
     private readonly Msg msg;
     private byte[] data;
+    private MsgHeader msgHeader;
 
-    public MacrosNatsResponse(Msg msg)
+    public MacrosNatsOutboundResponse(Msg msg)
     {
         this.msg = msg;
         Namespace = msg.Reply;
         data = null!;
+        msgHeader = new MsgHeader();
     }
 
     public ValueTask Respond()
     {
-        msg.Respond(System.Text.Encoding.UTF8.GetBytes(JsonSerializer.Serialize(new
-        {
-            statusCode = StatusCode,
-            data = data
-        })));
+        msgHeader.Set("StatusCode", StatusCode.ToString());
+        msg.ArrivalSubscription.Connection.Publish(new Msg(Namespace, msgHeader, data));
         return ValueTask.CompletedTask;
     }
 

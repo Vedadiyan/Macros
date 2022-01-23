@@ -1,0 +1,22 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30114.105
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Macros.Serialization.Core", "Macros.Serialization.Core\Macros.Serialization.Core.csproj", "{DC3D110F-2303-4C99-8888-5CE3B1BCC5EB}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{DC3D110F-2303-4C99-8888-5CE3B1BCC5EB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DC3D110F-2303-4C99-8888-5CE3B1BCC5EB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DC3D110F-2303-4C99-8888-5CE3B1BCC5EB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DC3D110F-2303-4C99-8888-5CE3B1BCC5EB}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal

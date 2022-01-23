@@ -23,5 +23,6 @@
   <ItemGroup>
     <ProjectReference Include="../Macros.Net/Macros.Net.RPC.Core/Macros.Net.RPC.Core.csproj"></ProjectReference>
     <ProjectReference Include="../Macros.Net/Macros.Net.RPC.NATS/Macros.Net.RPC.NATS.csproj"></ProjectReference>
+    <ProjectReference Include="../Macros.Serialization/Macros.Serialization.Core/Macros.Serialization.Core.csproj"></ProjectReference>
   </ItemGroup>
 </Project>

@@ -19,9 +19,9 @@ public class RpcParameterContext
         {
             return macrosTransport;
         }
-        if (macrosTransport.Request.MacrosProtocol.Params.TryGetValue(Name, out Func<Type, object>? value))
+        if (macrosTransport.Request.TryGetParam(type, Name, out object value))
         {
-            return value(type);
+            return value;
         }
         return null!;
     }

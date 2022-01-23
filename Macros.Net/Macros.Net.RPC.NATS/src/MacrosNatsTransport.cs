@@ -10,7 +10,7 @@ public class MacrosNatsTransport : IMacrosTransport
     public IMacrosResponse Response { get; }
     public MacrosNatsTransport(string @namespace, int namespaceSegments, Msg msg)
     {
-        Request = new MacrosNatsRequest(@namespace, namespaceSegments, msg);
-        Response = new MacrosNatsResponse(msg);
+        Request = new MacrosNatsInboundRequest(@namespace, namespaceSegments, msg);
+        Response = new MacrosNatsOutboundResponse(msg);
     }
 }

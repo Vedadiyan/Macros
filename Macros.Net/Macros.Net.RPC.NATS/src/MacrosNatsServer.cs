@@ -2,6 +2,7 @@ using System.Reflection;
 using Macros.Net.RPC.Core;
 using Macros.Net.RPC.Core.Abstraction;
 using Macros.Net.RPC.Core.Reflections;
+using Macros.Serialization.Core.Abstraction;
 using NATS.Client;
 
 
@@ -9,10 +10,16 @@ namespace Macros.Net.RPC.NATS;
 
 public sealed class MacrosNatsServer : IMacrosServer
 {
+    internal static string DefaultSerializerId { get; }
     private readonly IConnection connection;
     private readonly List<IAsyncSubscription> subscriptions;
-    public MacrosNatsServer()
+    static MacrosNatsServer()
     {
+        DefaultSerializerId = Guid.NewGuid().ToString();
+    }
+    public MacrosNatsServer(IMacrosSerializer defaultMacrosSerializer)
+    {
+        Inject.Register.AddSingleton(defaultMacrosSerializer, DefaultSerializerId);
         Inject.Register.AutoRegister();
         connection = new ConnectionFactory().CreateConnection();
         subscriptions = new List<IAsyncSubscription>();
