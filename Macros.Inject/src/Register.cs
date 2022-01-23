@@ -119,6 +119,6 @@ public class Register
 
     public static void AutoRegister()
     {
-        Assembly.GetExecutingAssembly().RegisterInjectables();
+        Assembly.GetCallingAssembly().RegisterInjectables();
     }
 }

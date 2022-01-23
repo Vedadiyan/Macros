@@ -7,7 +7,8 @@ public static class AssemblyExtensions
 {
     public static void RegisterInjectables(this Assembly assembly)
     {
-        AssemblyName[] assemblyNames = assembly.GetReferencedAssemblies();
+        List<AssemblyName> assemblyNames = assembly.GetReferencedAssemblies().ToList();
+        assemblyNames.Add(assembly.GetName());
         foreach (var assemblyName in assemblyNames)
         {
             IEnumerable<Type> exportedTypes = Assembly.Load(assemblyName).ExportedTypes;

@@ -17,7 +17,6 @@ public class NatsJsonControllerTest
     {
         MacrosNatsServer macrosNatsServer = new MacrosNatsServer();
         macrosNatsServer.StartAsync(CancellationToken.None);
-        Macros.Inject.Register.AddTransient<NatsJsonController>();
     }
     [Fact]
     public void SimpleTest()

@@ -1,4 +1,5 @@
 using System.Reflection;
+using Macros.Inject.Annotations;
 using Macros.Net.RPC.Core.Abstraction.RPCProtocol;
 using Macros.Net.RPC.Core.Annotations;
 
@@ -14,7 +15,11 @@ public sealed class RpcControllerContext
         this.type = type;
         Namespace = @namespace;
         actions = new Dictionary<string, RpcActionContext>();
-        Macros.Inject.Register.AddTransient(type);
+        InjectableAttribute? injectableAttribute = type.GetCustomAttribute<InjectableAttribute>();
+        if (injectableAttribute == null)
+        {
+            Macros.Inject.Register.AddTransient(type);
+        }
         foreach (var methodInfo in methodInfos)
         {
             ActionAttribute actionAttribute = methodInfo.GetCustomAttribute<ActionAttribute>()!;

@@ -13,6 +13,7 @@ public sealed class MacrosNatsServer : IMacrosServer
     private readonly List<IAsyncSubscription> subscriptions;
     public MacrosNatsServer()
     {
+        Inject.Register.AutoRegister();
         connection = new ConnectionFactory().CreateConnection();
         subscriptions = new List<IAsyncSubscription>();
         IEnumerable<RpcControllerContext> controllers = Assembly.GetCallingAssembly().GetControllers();
