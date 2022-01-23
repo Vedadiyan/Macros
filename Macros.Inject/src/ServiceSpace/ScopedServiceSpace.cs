@@ -3,22 +3,31 @@ using Macros.Inject.Abstraction;
 
 namespace Macros.Inject.ServiceSpace;
 
-public class ScopedServiceSpace<T> : IServiceSpace where T : class, new()
+public class ScopedServiceSpace<T> : ScopedServiceSpace where T : class, new()
+{
+    public ScopedServiceSpace(string serviceName) : base(typeof(T), serviceName)
+    {
+    }
+    public ScopedServiceSpace(Func<T> instance, string serviceName) : base(typeof(T), instance, serviceName)
+    {
+    }
+}
+public class ScopedServiceSpace : IServiceSpace
 {
     private Dictionary<object, WeakReference<Lazy<object>>> instances;
     public string ServiceName { get; }
     public Type ServiceType { get; }
-    private readonly Func<T>? instance;
+    private readonly Func<object>? instance;
 
-    public ScopedServiceSpace(string serviceName)
+    public ScopedServiceSpace(Type type, string serviceName)
     {
-        ServiceType = typeof(T);
+        ServiceType = type;
         ServiceName = serviceName;
         instances = new Dictionary<object, WeakReference<Lazy<object>>>();
     }
-    public ScopedServiceSpace(Func<T> instance, string serviceName)
+    public ScopedServiceSpace(Type type, Func<object> instance, string serviceName)
     {
-        ServiceType = typeof(T);
+        ServiceType = type;
         ServiceName = serviceName;
         this.instance = instance;
         instances = new Dictionary<object, WeakReference<Lazy<object>>>();
