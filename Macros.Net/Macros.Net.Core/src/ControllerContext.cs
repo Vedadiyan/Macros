@@ -1,7 +1,10 @@
 using System.Reflection;
+using Macros.Inject;
 using Macros.Inject.Annotations;
+using Macros.Net.Core.Abstraction;
 using Macros.Net.Core.Abstraction.MacrosTransport;
 using Macros.Net.Core.Annotations;
+using Macros.Progressives;
 
 namespace Macros.Net.Core;
 
@@ -10,11 +13,26 @@ public sealed class ControllerContext
     public string Route { get; }
     private readonly Dictionary<string, ActionContext> actions;
     private readonly Type type;
-    public ControllerContext(Type type, string route, char routeDelimiter, MethodInfo[] methodInfos)
+    private readonly IRouteGenerator routeGenerator;
+    public ControllerContext(Type type, MethodInfo[] methodInfos) : 
+    this(new Result<IRouteGenerator>(() => Resolve.Service<IRouteGenerator>()).Error(x => default!).Unwrap())
     {
         this.type = type;
+        RouteAttribute? routeAttribute = type.GetCustomAttribute<RouteAttribute>();
+        string route;
+        if (routeAttribute != null)
+        {
+            route = routeGenerator.GenerateRoute(routeAttribute.RouteSegments);
+        }
+        else
+        {
+            route = type.FullName!;
+        }
+        if (!routeGenerator.IsValidRoute(route))
+        {
+            throw new ArgumentException();
+        }
         Route = route;
-        actions = new Dictionary<string, ActionContext>();
         InjectableAttribute? injectableAttribute = type.GetCustomAttribute<InjectableAttribute>();
         if (injectableAttribute == null)
         {
@@ -23,8 +41,15 @@ public sealed class ControllerContext
         foreach (var methodInfo in methodInfos)
         {
             ActionAttribute actionAttribute = methodInfo.GetCustomAttribute<ActionAttribute>()!;
-            actions.Add(actionAttribute?.Name ?? methodInfo.Name, new ActionContext(route, routeDelimiter, methodInfo));
+            actions.Add(actionAttribute?.Name ?? methodInfo.Name, new ActionContext(this, methodInfo));
         }
+    }
+    private ControllerContext(IRouteGenerator routeGenerator)
+    {
+        this.routeGenerator = routeGenerator;
+        actions = new Dictionary<string, ActionContext>();
+        type = null!;
+        Route = null!;
     }
     public async void HandleRequest(IMacrosTransport macrosTransport)
     {

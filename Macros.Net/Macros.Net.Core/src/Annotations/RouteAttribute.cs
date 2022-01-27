@@ -2,9 +2,9 @@ namespace Macros.Net.Core.Annotations;
 
 public class RouteAttribute : Attribute
 {
-    public string Route { get; }
-    public RouteAttribute(string route)
+    public string[] RouteSegments { get; }
+    public RouteAttribute(params string[] routeSegments)
     {
-        Route = route;
+        this.RouteSegments = routeSegments;
     }
 }

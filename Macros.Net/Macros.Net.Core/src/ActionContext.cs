@@ -1,7 +1,10 @@
 using System.Reflection;
+using Macros.Inject;
+using Macros.Net.Core.Abstraction;
 using Macros.Net.Core.Abstraction.MacrosTransport;
 using Macros.Net.Core.Annotations;
 using Macros.Net.Core.Reflections;
+using Macros.Progressives;
 
 namespace Macros.Net.Core;
 
@@ -10,18 +13,25 @@ public class ActionContext
     public string Route { get; }
     public IReadOnlyList<ParameterContext> Parameters { get; }
     private readonly Func<object, object[], object> actionExecutor;
-    public ActionContext(string controllerRoute,char routeDelimiter, MethodInfo methodInfo)
+    private readonly IRouteGenerator routeGenerator;
+    public ActionContext(ControllerContext controllerContext, MethodInfo methodInfo) :
+    this(new Result<IRouteGenerator>(() => Resolve.Service<IRouteGenerator>()).Error(x => default!).Unwrap())
     {
         Parameters = detectParamaters(methodInfo).ToList();
         if (methodInfo.TryGetCustomAttribute<RouteAttribute>(out RouteAttribute routeAttribute))
         {
-            if (routeAttribute.Route.StartsWith(routeDelimiter) == true)
+            string route = routeGenerator.GenerateRoute(routeAttribute.RouteSegments);
+            if (!routeGenerator.IsValidRoute(route))
             {
-                Route = routeAttribute.Route.TrimStart(routeDelimiter);
+                throw new ArgumentException();
+            }
+            if (routeGenerator.IsRoot(route))
+            {
+                Route = route;
             }
             else
             {
-                Route = controllerRoute + routeDelimiter.ToString() + routeAttribute.Route;
+                Route = routeGenerator.GenerateRoute(controllerContext.Route, route);
             }
         }
         else
@@ -29,6 +39,13 @@ public class ActionContext
             Route = methodInfo.Name;
         }
         actionExecutor = methodInfo.Invoke!;
+    }
+    private ActionContext(IRouteGenerator routeGenerator)
+    {
+        this.routeGenerator = routeGenerator;
+        Route = null!;
+        Parameters = null!;
+        actionExecutor = null!;
     }
     public Func<object, object> GetActionExecutor(IMacrosTransport macrosTransport)
     {

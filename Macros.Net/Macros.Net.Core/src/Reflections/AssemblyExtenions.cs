@@ -17,17 +17,8 @@ public static class AssemblyExtensions
             {
                 if (exportedType.TryGetCustomAttribute<ControllerAttribute>(out ControllerAttribute controllerAttribute))
                 {
-                    string route;
-                    if (exportedType.TryGetCustomAttribute<RouteAttribute>(out RouteAttribute routeAttribute))
-                    {
-                        route = routeAttribute.Route;
-                    }
-                    else
-                    {
-                        route = exportedType.FullName ?? throw new ArgumentNullException();
-                    }
                     MethodInfo[] methodInfos = exportedType.GetMethods().Where(x => x.GetCustomAttribute<NonActionAttribute>() == null).ToArray();
-                    yield return (routeBuilder, c) => new ControllerContext(exportedType, routeBuilder(route), c, methodInfos);
+                    yield return (routeBuilder, c) => new ControllerContext(exportedType, methodInfos);
                 }
             }
         }

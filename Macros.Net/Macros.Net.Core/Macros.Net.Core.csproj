@@ -7,5 +7,6 @@
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="../../Macros.Inject/Macros.Inject.csproj"></ProjectReference>
+    <ProjectReference Include="../../Macros.Progressives/Macros.Progressives.csproj"></ProjectReference>
   </ItemGroup>
 </Project>
