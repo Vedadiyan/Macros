@@ -1,3 +1,5 @@
+using Macros.Net.Core.Annotations;
+
 namespace Macros.Net.Core.Abstraction;
 
 public interface IRouteGenerator {

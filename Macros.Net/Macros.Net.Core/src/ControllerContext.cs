@@ -12,9 +12,10 @@ public sealed class ControllerContext
 {
     public string Route { get; }
     private readonly Dictionary<string, ActionContext> actions;
+    public IReadOnlyDictionary<string, ActionContext> Actions => actions;
     private readonly Type type;
     private readonly IRouteGenerator routeGenerator;
-    public ControllerContext(Type type, MethodInfo[] methodInfos) : 
+    public ControllerContext(Type type, MethodInfo[] methodInfos) :
     this(new Result<IRouteGenerator>(() => Resolve.Service<IRouteGenerator>()).Error(x => default!).Unwrap())
     {
         this.type = type;
@@ -51,9 +52,9 @@ public sealed class ControllerContext
         type = null!;
         Route = null!;
     }
-    public async void HandleRequest(IMacrosTransport macrosTransport)
+    public async Task HandleRequestAsync(IMacrosTransport macrosTransport)
     {
-        if (actions.TryGetValue(macrosTransport.Request.Action, out ActionContext? actionContext))
+        if (actions.TryGetValue(macrosTransport.Request.Route, out ActionContext? actionContext))
         {
             try
             {
